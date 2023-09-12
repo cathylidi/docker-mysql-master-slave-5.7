@@ -10,8 +10,8 @@ services:
       --default-authentication-plugin=mysql_native_password
       --sql_mode=NO_ENGINE_SUBSTITUTION
     volumes:
-      - ./twoDB/master/data:/var/lib/mysql
-      - ./twoDB/master/logs:/var/log/mysql
+      - ~/Apps/dis_Files/master/data:/var/lib/mysql
+      - ~/Apps/dis_Files/master/logs:/var/log/mysql
       - ./twoDB/master.cnf:/etc/mysql/conf.d/my.cnf
     container_name: mysql-dis
   mysql-dis-reader:
@@ -24,7 +24,7 @@ services:
       --default-authentication-plugin=mysql_native_password
       --sql_mode=NO_ENGINE_SUBSTITUTION
     volumes:
-      -./twoDB/slave/data:/var/lib/mysql
-      - ./twoDB/slave/logs:/var/log/mysql
+      - ~/Apps/dis_Files/slave/data:/var/lib/mysql
+      - ~/Apps/dis_Files/slave/logs:/var/log/mysql
       - ./twoDB/slave.cnf:/etc/mysql/conf.d/my.cnf
     container_name: mysql-dis-reader
