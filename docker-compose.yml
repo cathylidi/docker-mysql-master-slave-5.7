@@ -1,6 +1,6 @@
 version: '3'
 services:
-  mysql-dis:
+  mysql-db:
     build: .MySQL_local   
     ports:
       - "3306:3306"
@@ -10,11 +10,11 @@ services:
       --default-authentication-plugin=mysql_native_password
       --sql_mode=NO_ENGINE_SUBSTITUTION
     volumes:
-      - ~/Apps/dis_Files/master/data:/var/lib/mysql
-      - ~/Apps/dis_Files/master/logs:/var/log/mysql
+      - ~/Apps/db_Files/master/data:/var/lib/mysql
+      - ~/Apps/db_Files/master/logs:/var/log/mysql
       - ./twoDB/master.cnf:/etc/mysql/conf.d/my.cnf
-    container_name: mysql-dis
-  mysql-dis-reader:
+    container_name: mysql-db
+  mysql-db-reader:
     build: .MySQL_local   
     ports:
       - "3307:3306"
@@ -24,33 +24,33 @@ services:
       --default-authentication-plugin=mysql_native_password
       --sql_mode=NO_ENGINE_SUBSTITUTION
     volumes:
-      - ~/Apps/dis_Files/slave/data:/var/lib/mysql
-      - ~/Apps/dis_Files/slave/logs:/var/log/mysql
+      - ~/Apps/db_Files/slave/data:/var/lib/mysql
+      - ~/Apps/db_Files/slave/logs:/var/log/mysql
       - ./twoDB/slave.cnf:/etc/mysql/conf.d/my.cnf
-    container_name: mysql-dis-reader
- dis:
+    container_name: mysql-db-reader
+ db:
     build: .Docker_local
     ports:
       - "443:8443"
     environment:
-      - dis_DB_HOST=mysql-dis
-      - dis_DB_READER_HOST=mysql-dis-reader
-      - dis_DB_USER=root
-      - dis_DB_READER_USER=root
-      - dis_DB_PASSWORD=Password123
-      - dis_DB_READER_PASSWORD=Password123
-      - dis_API_PASSWORD=placeholder      
+      - db_DB_HOST=mysql-db
+      - db_DB_READER_HOST=mysql-db-reader
+      - db_DB_USER=root
+      - db_DB_READER_USER=root
+      - db_DB_PASSWORD=Password123
+      - db_DB_READER_PASSWORD=Password123
+      - db_API_PASSWORD=placeholder      
       - azureb2badmin_API_PASSWORD=placeholder
       - GRAPH_CLIENT_ID
       - GRAPH_CLIENT_SECRET
       - GRAPH_TENANT_ID
       - FEDERATED_DOMAINS=federated.com,federated2.com,federated3.com
       - AZUREB2B_DOMAINS=azureb2b.com
-    container_name: dis
+    container_name: db
     depends_on:
-      - mysql-dis
-  mail-dis:
+      - mysql-db
+  mail-db:
     image: schickling/mailcatcher
     ports:
      - 1080:1080
-    container_name: mail-dis
+    container_name: mail-db
