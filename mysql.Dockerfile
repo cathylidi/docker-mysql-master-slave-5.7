@@ -1,7 +1,7 @@
 FROM mysql:5.7
 
-COPY disv2.sql /disv2/disv2.sql
-COPY disv2-triggers.sql /disv2/disv2-triggers.sql
-COPY settings-local.sql /disv2/settings-local.sql
+COPY dbv2.sql /dbv2/dbv2.sql
+COPY dbv2-triggers.sql /dbv2/dbv2-triggers.sql
+COPY settings-local.sql /dbv2/settings-local.sql
 
 EXPOSE 3306
