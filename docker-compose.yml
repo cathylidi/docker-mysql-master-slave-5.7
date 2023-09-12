@@ -28,3 +28,29 @@ services:
       - ~/Apps/dis_Files/slave/logs:/var/log/mysql
       - ./twoDB/slave.cnf:/etc/mysql/conf.d/my.cnf
     container_name: mysql-dis-reader
+ dis:
+    build: .Docker_local
+    ports:
+      - "443:8443"
+    environment:
+      - dis_DB_HOST=mysql-dis
+      - dis_DB_READER_HOST=mysql-dis-reader
+      - dis_DB_USER=root
+      - dis_DB_READER_USER=root
+      - dis_DB_PASSWORD=Password123
+      - dis_DB_READER_PASSWORD=Password123
+      - dis_API_PASSWORD=placeholder      
+      - azureb2badmin_API_PASSWORD=placeholder
+      - GRAPH_CLIENT_ID
+      - GRAPH_CLIENT_SECRET
+      - GRAPH_TENANT_ID
+      - FEDERATED_DOMAINS=federated.com,federated2.com,federated3.com
+      - AZUREB2B_DOMAINS=azureb2b.com
+    container_name: dis
+    depends_on:
+      - mysql-dis
+  mail-dis:
+    image: schickling/mailcatcher
+    ports:
+     - 1080:1080
+    container_name: mail-dis
