@@ -1,50 +1,30 @@
 version: '3'
 services:
-  mysql_master:
-    image: mysql:5.7
-    env_file:
-      - ./master/mysql_master.env
-    container_name: "mysql_master"
-    restart: "no"
+  mysql-dis:
+    build: .MySQL_local   
     ports:
-      - 4406:3306
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Password123
+    command: 
+      --default-authentication-plugin=mysql_native_password
+      --sql_mode=NO_ENGINE_SUBSTITUTION
     volumes:
-      - ./master/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf
-      - ./master/data:/var/lib/mysql
-      - ./master/logs:/var/log/mysql
-    networks:
-      - overlay
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 30s
-      timeout: 20s
-      retries: 10
-      start_period: 30s
-
-  mysql_slave:
-    image: mysql:5.7
-    env_file:
-      - ./slave/mysql_slave.env
-    container_name: "mysql_slave"
-    restart: "no"
+      - ./twoDB/master/data:/var/lib/mysql
+      - ./twoDB/master/logs:/var/log/mysql
+      - ./twoDB/master.cnf:/etc/mysql/conf.d/my.cnf
+    container_name: mysql-dis
+  mysql-dis-reader:
+    build: .MySQL_local   
     ports:
-      - 5506:3306
-    depends_on:
-      mysql_master:
-        condition: service_healthy
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: Password123
+    command: 
+      --default-authentication-plugin=mysql_native_password
+      --sql_mode=NO_ENGINE_SUBSTITUTION
     volumes:
-      - ./slave/conf/mysql.conf.cnf:/etc/mysql/conf.d/mysql.conf.cnf
-      - ./slave/data:/var/lib/mysql
-      - ./slave/logs:/var/log/mysql
-    networks:
-      - overlay
-    healthcheck:
-      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
-      interval: 30s
-      timeout: 20s
-      retries: 10
-      start_period: 30s
-
-networks:
-  overlay:
-
+      -./twoDB/slave/data:/var/lib/mysql
+      - ./twoDB/slave/logs:/var/log/mysql
+      - ./twoDB/slave.cnf:/etc/mysql/conf.d/my.cnf
+    container_name: mysql-dis-reader
